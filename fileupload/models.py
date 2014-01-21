@@ -1,5 +1,7 @@
 # encoding: utf-8
 from django.db import models
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFit
 
 
 class Picture(models.Model):
@@ -10,6 +12,7 @@ class Picture(models.Model):
 
     """
     file = models.ImageField(upload_to="pictures")
+    thumbnail = ImageSpecField([ResizeToFit(height=50)], source='file', format='JPEG', options={'quality': 90})
     slug = models.SlugField(max_length=50, blank=True)
 
     def __unicode__(self):
