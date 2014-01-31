@@ -11,7 +11,9 @@ class PictureCreateView(CreateView):
     def form_valid(self, form):
         self.object = form.save()
         files = [serialize(self.object)]
-        data = [{'name': f.name, 'url': self.object.file.url, 'thumbnail_url': self.object.thumbnail.url, 'delete_url': reverse('upload-delete', args=[self.object.id]), 'delete_type': "DELETE"}]
+        data = {'files': files}
+		#f = self.request.FILES.get('file')
+        #data = [{'name': f.name, 'url': self.object.file.url, 'thumbnail_url': self.object.thumbnail.url, 'delete_url': reverse('upload-delete', args=[self.object.id]), 'delete_type': "DELETE"}]
         response = JSONResponse(data, mimetype=response_mimetype(self.request))
         response['Content-Disposition'] = 'inline; filename=files.json'
         return response
