@@ -5,6 +5,7 @@ from .response import JSONResponse, response_mimetype
 from .serialize import serialize
 from fileupload.models import *
 from django.shortcuts import render
+import urllib
 
 
 class PictureCreateView(CreateView):
@@ -13,6 +14,11 @@ class PictureCreateView(CreateView):
     def form_valid(self, form):
         self.object = form.save()
         files = [serialize(self.object)]
+        for i in range(len(files)):
+            name=urllib.parse.unquote(files[i]["thumbnailUrl"][7:])
+            hi=Picture.objects.get(file=name)
+            files[i]["thumbnail"]=hi.thumbnail.url
+            #files[i]["thumbnail"]=files[i]["thumbnailUrl"][7:]
         data = {'files': files}
 		#f = self.request.FILES.get('file')
         #data = [{'name': f.name, 'url': self.object.file.url, 'thumbnail_url': self.object.thumbnail.url, 'delete_url': reverse('upload-delete', args=[self.object.id]), 'delete_type': "DELETE"}]
@@ -54,7 +60,8 @@ class PictureListView(ListView):
     def render_to_response(self, context, **response_kwargs):
         files = [ serialize(p) for p in self.get_queryset() ]
         for i in range(len(files)):
-            hi=Picture.objects.get(file=files[i]["thumbnailUrl"][7:])
+            name=urllib.parse.unquote(files[i]["thumbnailUrl"][7:])
+            hi=Picture.objects.get(file=name)
             files[i]["thumbnail"]=hi.thumbnail.url
             #files[i]["thumbnail"]=files[i]["thumbnailUrl"][7:]
         data = {'files': files}
