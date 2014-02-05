@@ -3,7 +3,7 @@ from django.conf.urls import patterns, url
 from fileupload.views import (
         BasicVersionCreateView, BasicPlusVersionCreateView,
         jQueryVersionCreateView, AngularVersionCreateView,
-        PictureCreateView, PictureDeleteView, PictureListView,
+        PictureCreateView, PictureDeleteView, PictureListView
         )
 
 urlpatterns = patterns('',
@@ -14,4 +14,5 @@ urlpatterns = patterns('',
     url(r'^jquery-ui/$', jQueryVersionCreateView.as_view(), name='upload-jquery'),
     url(r'^delete/(?P<pk>\d+)$', PictureDeleteView.as_view(), name='upload-delete'),
     url(r'^view/$', PictureListView.as_view(), name='upload-view'),
+	url(r'^test/$', 'fileupload.views.test', name='upload-view'),
 )

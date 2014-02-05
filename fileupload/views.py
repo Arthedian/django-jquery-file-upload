@@ -3,6 +3,8 @@ from django.views.generic import CreateView, DeleteView, ListView
 from .models import Picture
 from .response import JSONResponse, response_mimetype
 from .serialize import serialize
+from fileupload.models import *
+from django.shortcuts import render
 
 
 class PictureCreateView(CreateView):
@@ -51,7 +53,15 @@ class PictureListView(ListView):
 
     def render_to_response(self, context, **response_kwargs):
         files = [ serialize(p) for p in self.get_queryset() ]
+        for i in range(len(files)):
+            hi=Picture.objects.get(file=files[i]["thumbnailUrl"][7:])
+            files[i]["thumbnail"]=hi.thumbnail.url
+            #files[i]["thumbnail"]=files[i]["thumbnailUrl"][7:]
         data = {'files': files}
         response = JSONResponse(data, mimetype=response_mimetype(self.request))
         response['Content-Disposition'] = 'inline; filename=files.json'
         return response
+
+def test(request):
+	novinky=Picture.objects.all() #vezme vsechny novinky a nejnovejsi vlozi na zacatek
+	return render(request, 'test.html', {'test': novinky,})
