@@ -68,7 +68,3 @@ class PictureListView(ListView):
         response = JSONResponse(data, mimetype=response_mimetype(self.request))
         response['Content-Disposition'] = 'inline; filename=files.json'
         return response
-
-def test(request):
-	novinky=Picture.objects.all() #vezme vsechny novinky a nejnovejsi vlozi na zacatek
-	return render(request, 'test.html', {'test': novinky,})
